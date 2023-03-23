@@ -7,10 +7,12 @@ def create_spark_session() -> SparkSession:
     spark.conf.set(
         "spark.sql.shuffle.partitions", spark.sparkContext.defaultParallelism
     )
+    # suppress _SUCCESS file generation
+    spark.conf.set("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
     return spark
 
 
-def read_data(source_path: str, spark: SparkSession) -> DataFrame:
+def read_from_bronze(source_path: str, spark: SparkSession) -> DataFrame:
     """get data from bronze directory and load into Spark dataframe"""
     return spark.read.csv(path=source_path, header=True, multiLine=True)
 
@@ -31,3 +33,7 @@ def convert_datatypes(df: DataFrame, spark: SparkSession) -> DataFrame:
         )
     )
     return df_converted_dtypes
+
+
+def to_silver_layer(df: DataFrame, target_path: str) -> None:
+    df.write.parquet(path=target_path, mode="overwrite", compression="snappy")
