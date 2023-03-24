@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as f
+from google.cloud import storage
 
 
 def create_spark_session() -> SparkSession:
@@ -35,5 +36,10 @@ def convert_datatypes(df: DataFrame, spark: SparkSession) -> DataFrame:
     return df_converted_dtypes
 
 
-def to_silver_layer(df: DataFrame, target_path: str) -> None:
+def write_to_silver_layer(df: DataFrame, target_path: str) -> None:
     df.write.parquet(path=target_path, mode="overwrite", compression="snappy")
+
+
+def write_to_gcs_bucket(json_credentials_path: str) -> None:
+    client = storage.Client.from_service_account_json(json_credentials_path)
+    client.create_bucket("data-eng-capstone-project", location="EUROPE-WEST3")
