@@ -37,9 +37,18 @@ def convert_datatypes(df: DataFrame, spark: SparkSession) -> DataFrame:
 
 
 def write_to_silver_layer(df: DataFrame, target_path: str) -> None:
-    df.write.parquet(path=target_path, mode="overwrite", compression="snappy")
+    df.toPandas().to_parquet(path=target_path)
 
 
-def write_to_gcs_bucket(json_credentials_path: str) -> None:
-    client = storage.Client.from_service_account_json(json_credentials_path)
-    client.create_bucket("data-eng-capstone-project", location="EUROPE-WEST3")
+def write_to_gcs_bucket(
+    file_from_silver_layer: str, bucket_name: str, json_credentials_path: str
+) -> None:
+    client: storage.Client = storage.Client.from_service_account_json(
+        json_credentials_path
+    )
+    bucket: storage.Bucket = storage.Bucket(client, name=bucket_name)
+    # name of uploaded file
+    blob: storage.bucket.Blob = bucket.blob(
+        blob_name="yt_popular_videos_de.snappy.parquet"
+    )
+    blob.upload_from_filename(file_from_silver_layer)
