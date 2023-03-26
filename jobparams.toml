@@ -1,0 +1,6 @@
+[jobparams]
+    json_credentials_path = "./taxi-rides-ny-376611-f7f2f8eb424c.json"
+    file_in_bronze_layer = "data/bronze/yt_popular_videos_de.csv"
+    file_in_silver_layer = "data/silver/yt_popular_videos_de.snappy.parquet"
+    gcs_blob_name = "yt_popular_videos_de.snappy.parquet"
+    gcs_bucket_and_dataset_name = "data_eng_capstone_project"

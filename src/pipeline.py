@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as f
-from google.cloud import storage
+from google.cloud import bigquery, storage
 
 
 def create_spark_session() -> SparkSession:
@@ -41,14 +41,33 @@ def write_to_silver_layer(df: DataFrame, target_path: str) -> None:
 
 
 def write_to_gcs_bucket(
-    file_from_silver_layer: str, bucket_name: str, json_credentials_path: str
+    file_in_silver_layer: str,
+    bucket_name: str,
+    json_credentials_path: str,
+    blob_name: str,
 ) -> None:
     client: storage.Client = storage.Client.from_service_account_json(
         json_credentials_path
     )
     bucket: storage.Bucket = storage.Bucket(client, name=bucket_name)
     # name of uploaded file
-    blob: storage.bucket.Blob = bucket.blob(
-        blob_name="yt_popular_videos_de.snappy.parquet"
-    )
-    blob.upload_from_filename(file_from_silver_layer)
+    blob: storage.bucket.Blob = bucket.blob(blob_name=blob_name)
+    blob.upload_from_filename(file_in_silver_layer)
+
+
+def create_bq_dataset(json_credentials_path: str, dataset_name: str) -> None:
+    client = bigquery.Client.from_service_account_json(json_credentials_path)
+    # client = client.from_service_account_json(json_credentials_path)
+    print(f"{client.location=}")
+    print(f"{client.project=}")
+
+    # fully qualified name of tablespace/dataset
+    dataset_id = f"{client.project}.{dataset_name}"
+
+    # Construct a full Dataset object to send to the API.
+    dataset = bigquery.Dataset(dataset_id)
+    dataset.location = "europe-west3"
+
+    # Send the dataset to the API for creation, with an explicit timeout.
+    dataset = client.create_dataset(dataset, exists_ok=True, timeout=30)
+    print("Created dataset {}.{}".format(client.project, dataset.dataset_id))
