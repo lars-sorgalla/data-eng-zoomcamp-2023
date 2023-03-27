@@ -77,6 +77,9 @@ def create_bq_table(
     gcs_bucket_name: str,
     gcs_blob_name: str,
 ) -> None:
+    """see:
+    https://cloud.google.com/bigquery/docs/loading-data-cloud-storage-parquet#loading_parquet_data_into_a_new_table
+    """
     # get credentials
     client = bigquery.Client.from_service_account_json(json_credentials_path)
 
