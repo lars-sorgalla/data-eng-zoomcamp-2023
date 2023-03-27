@@ -6,6 +6,7 @@ from src.pipeline import (
     write_to_silver_layer,
     write_to_gcs_bucket,
     create_bq_dataset,
+    create_bq_table,
 )
 
 # parse job parameter configuration file
@@ -37,4 +38,13 @@ print("\nstart: create_bq_dataset\n")
 create_bq_dataset(
     json_credentials_path=job_conf.get("json_credentials_path"),
     dataset_name=job_conf.get("gcs_bucket_and_dataset_name"),
+)
+
+print("\nstart: create_bq_table\n")
+create_bq_table(
+    json_credentials_path=job_conf.get("json_credentials_path"),
+    dataset_name=job_conf.get("gcs_bucket_and_dataset_name"),
+    table_name=job_conf.get("gcs_bq_table_name"),
+    gcs_bucket_name=job_conf.get("gcs_bucket_and_dataset_name"),
+    gcs_blob_name=job_conf.get("gcs_blob_name"),
 )

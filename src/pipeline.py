@@ -57,9 +57,6 @@ def write_to_gcs_bucket(
 
 def create_bq_dataset(json_credentials_path: str, dataset_name: str) -> None:
     client = bigquery.Client.from_service_account_json(json_credentials_path)
-    # client = client.from_service_account_json(json_credentials_path)
-    print(f"{client.location=}")
-    print(f"{client.project=}")
 
     # fully qualified name of tablespace/dataset
     dataset_id = f"{client.project}.{dataset_name}"
@@ -67,7 +64,35 @@ def create_bq_dataset(json_credentials_path: str, dataset_name: str) -> None:
     # Construct a full Dataset object to send to the API.
     dataset = bigquery.Dataset(dataset_id)
     dataset.location = "europe-west3"
-
+    print(f"{dataset.location=}")
     # Send the dataset to the API for creation, with an explicit timeout.
-    dataset = client.create_dataset(dataset, exists_ok=True, timeout=30)
-    print("Created dataset {}.{}".format(client.project, dataset.dataset_id))
+    dataset_job = client.create_dataset(dataset, exists_ok=True, timeout=30)
+    print("Created dataset {}.{}".format(client.project, dataset_job.dataset_id))
+
+
+def create_bq_table(
+    json_credentials_path: str,
+    dataset_name: str,
+    table_name: str,
+    gcs_bucket_name: str,
+    gcs_blob_name: str,
+) -> None:
+    # get credentials
+    client = bigquery.Client.from_service_account_json(json_credentials_path)
+
+    # fully qualified name of table
+    table_id = f"{client.project}.{dataset_name}.{table_name}"
+
+    # delete table for idempotency
+    client.delete_table(table=table_id, not_found_ok=True)
+
+    # set config for load job to use Parquet source file format
+    job_config = bigquery.LoadJobConfig(source_format=bigquery.SourceFormat.PARQUET)
+
+    # execute load job from Cloud Storage to BigQuery
+    client.load_table_from_uri(
+        source_uris=f"gs://{gcs_bucket_name}/{gcs_blob_name}",
+        destination=table_id,
+        location="europe-west3",
+        job_config=job_config,
+    )

@@ -4,3 +4,4 @@
     file_in_silver_layer = "data/silver/yt_popular_videos_de.snappy.parquet"
     gcs_blob_name = "yt_popular_videos_de.snappy.parquet"
     gcs_bucket_and_dataset_name = "data_eng_capstone_project"
+    gcs_bq_table_name = "yt_popular_videos_de"
