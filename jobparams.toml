@@ -1,7 +1,15 @@
 [jobparams]
-    json_credentials_path = "./taxi-rides-ny-376611-f7f2f8eb424c.json"
-    file_in_bronze_layer = "data/bronze/yt_popular_videos_de.csv"
-    file_in_silver_layer = "data/silver/yt_popular_videos_de.snappy.parquet"
-    gcs_blob_name = "yt_popular_videos_de.snappy.parquet"
-    gcs_bucket_and_dataset_name = "data_eng_capstone_project"
-    gcs_bq_table_name = "yt_popular_videos_de"
+# directory where the source file is placed
+file_in_bronze_layer = "data/bronze/yt_popular_videos_de.csv"
+# directory where the transformed file is placed
+file_in_silver_layer = "data/silver/yt_popular_videos_de.snappy.parquet"
+
+# name of transformed file that is uploaded to Google Cloud Storage
+gcs_blob_name = "yt_popular_videos_de.snappy.parquet"
+# Table name to be created in BigQuery
+bq_table_name = "yt_popular_videos_de"
+# shared name for cloud storage bucket and BigQuery dataset
+gcs_bucket_and_dataset_name = "data_eng_capstone_project"
+
+# path to service account JSON file
+json_credentials_path = "./taxi-rides-ny-376611-f7f2f8eb424c.json"
