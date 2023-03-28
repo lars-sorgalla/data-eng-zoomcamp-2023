@@ -44,7 +44,7 @@ print("\nstart: create_bq_table\n")
 create_bq_table(
     json_credentials_path=job_conf.get("json_credentials_path"),
     dataset_name=job_conf.get("gcs_bucket_and_dataset_name"),
-    table_name=job_conf.get("gcs_bq_table_name"),
+    table_name=job_conf.get("bq_table_name"),
     gcs_bucket_name=job_conf.get("gcs_bucket_and_dataset_name"),
     gcs_blob_name=job_conf.get("gcs_blob_name"),
 )
