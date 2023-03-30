@@ -1,3 +1,8 @@
+# Welcome
+This project contains an end-to-end data pipeline, written in Python. It is my capstone project to finalize the [Data Engineering Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp#data-engineering-zoomcamp) in the 2023 Cohort. 
+
+The application reads local CSV data about trending Youtube videos in Germany, transforms it with Apache Spark and uploads it to Google Cloud Storage. Then it is loaded from GCS into BigQuery. At the very end is a Dashboard in Looker Studio, that connects to the transformed table in BigQuery.
+
 # TODOs
 - add logging
 - handle exceptions
@@ -51,3 +56,6 @@ python app.py
 
 # How This Application Works
 TODO: proceed here
+
+# Dashboard Result
+The data pipeline ultimately feeds into a Looker Studio dashboard. It can be viewed [here](https://lookerstudio.google.com/reporting/77a47276-3a27-4fe3-a57a-337966fcefe7). 
