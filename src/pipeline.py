@@ -1,8 +1,10 @@
 from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as f
 from google.cloud import bigquery, storage
+from prefect import task
 
 
+@task
 def create_spark_session() -> SparkSession:
     spark = SparkSession.builder.getOrCreate()
     spark.conf.set(
@@ -13,11 +15,13 @@ def create_spark_session() -> SparkSession:
     return spark
 
 
+@task
 def read_from_bronze(source_path: str, spark: SparkSession) -> DataFrame:
     """get data from bronze directory and load into Spark dataframe"""
     return spark.read.csv(path=source_path, header=True, multiLine=True)
 
 
+@task
 def convert_datatypes(df: DataFrame, spark: SparkSession) -> DataFrame:
     df_converted_dtypes = (
         df.withColumn("trending_date", f.to_date("trending_date", "yy.dd.MM"))
@@ -36,10 +40,12 @@ def convert_datatypes(df: DataFrame, spark: SparkSession) -> DataFrame:
     return df_converted_dtypes
 
 
+@task
 def write_to_silver_layer(df: DataFrame, target_path: str) -> None:
     df.toPandas().to_parquet(path=target_path)
 
 
+@task
 def write_to_gcs_bucket(
     file_in_silver_layer: str,
     bucket_name: str,
@@ -55,6 +61,7 @@ def write_to_gcs_bucket(
     blob.upload_from_filename(file_in_silver_layer)
 
 
+@task
 def create_bq_dataset(json_credentials_path: str, dataset_name: str) -> None:
     client = bigquery.Client.from_service_account_json(json_credentials_path)
 
@@ -70,6 +77,7 @@ def create_bq_dataset(json_credentials_path: str, dataset_name: str) -> None:
     print("Created dataset {}.{}".format(client.project, dataset_job.dataset_id))
 
 
+@task
 def create_bq_table(
     json_credentials_path: str,
     dataset_name: str,
