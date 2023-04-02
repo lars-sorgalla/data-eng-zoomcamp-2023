@@ -11,10 +11,13 @@ from pyspark.sql.types import (
     StructType,
     StructField,
 )
-from prefect import task
 
 
 class TestConvertDataTypes(unittest.TestCase):
+    """Test class that is unit testing the main Spark transformation
+    function: convert_datatypes().
+    """
+
     # executed before test case
     @classmethod
     def setUpClass(cls):
@@ -77,7 +80,7 @@ class TestConvertDataTypes(unittest.TestCase):
         # 2. Prepare an expected output data frame
         expected_schema = StructType(
             [
-                StructField("video_id", IntegerType(), nullable=True),
+                StructField("video_id", StringType(), nullable=True),
                 StructField("trending_date", DateType(), nullable=True),
                 StructField("title", StringType(), nullable=True),
                 StructField("channel_title", StringType(), nullable=True),
@@ -98,8 +101,7 @@ class TestConvertDataTypes(unittest.TestCase):
 
         expected_data = [
             (
-                # "LgVi6y5QIjM",
-                25,
+                "LgVi6y5QIjM",
                 datetime.date(2023, 3, 30),
                 "Wie werde ich zu einem Senior-Software-Entwickler?",
                 "Der Softwarekanal",
@@ -130,9 +132,9 @@ class TestConvertDataTypes(unittest.TestCase):
 
         # 4. assert if transformed df and expected df match
         # 4.1. compare schemas
-        print(f"{expected_df.schema.fields=}")
-        print(f"{transformed_df.schema.fields=}")
-        self.assertEquals(expected_df.schema, transformed_df.schema)
+        self.assertEqual(
+            expected_df.schema, transformed_df.schema, "Schemas not identical"
+        )
 
 
 if __name__ == "__main__":
