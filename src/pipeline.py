@@ -17,7 +17,10 @@ def create_spark_session() -> SparkSession:
 
 @task
 def read_from_bronze(source_path: str, spark: SparkSession) -> DataFrame:
-    """get data from bronze directory and load into Spark dataframe"""
+    """Get data from bronze directory and load into Spark dataframe.
+    Everything is being read as string and has to be converted to target
+    data types afterwards.
+    """
     return spark.read.csv(path=source_path, header=True, multiLine=True)
 
 
