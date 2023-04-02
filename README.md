@@ -4,6 +4,9 @@ This project contains an end-to-end data pipeline, written in Python. It is my c
 The application reads local CSV data about trending Youtube videos in Germany, transforms it with Apache Spark and uploads it to Google Cloud Storage. Then it is loaded from GCS into BigQuery. At the very end is a Dashboard in Looker Studio, that connects to the transformed table in BigQuery.
 
 # TODOs
+- create requirements_dev.txt for dev dependencies which are not needed for prod 
+environments e.g. Jupyter for local iterative development 
+see: https://realpython.com/lessons/production-vs-development-dependencies/
 - add logging
 - handle exceptions
     - do not use exists_ok=True in create_bq_dataset > create_dataset, but log existence
