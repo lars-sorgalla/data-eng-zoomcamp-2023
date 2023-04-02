@@ -1,3 +1,14 @@
+- [Welcome](#welcome)
+- [TODOs](#todos)
+- [Setup](#setup)
+  - [Google Cloud Credentials](#google-cloud-credentials)
+    - [Enable the APIs](#enable-the-apis)
+    - [Provide a JSON Credentials File](#provide-a-json-credentials-file)
+    - [Configuring Job Parameters](#configuring-job-parameters)
+- [Running the Code](#running-the-code)
+- [How This Application Works](#how-this-application-works)
+- [Dashboard Result](#dashboard-result)
+
 # Welcome
 This project contains an end-to-end data pipeline, written in Python. It is my capstone project to finalize the [Data Engineering Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp#data-engineering-zoomcamp) in the 2023 Cohort. 
 
