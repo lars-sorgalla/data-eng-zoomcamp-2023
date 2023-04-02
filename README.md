@@ -7,7 +7,6 @@ The application reads local CSV data about trending Youtube videos in Germany, t
 - create requirements_dev.txt for dev dependencies which are not needed for prod 
 environments e.g. Jupyter for local iterative development 
 see: https://realpython.com/lessons/production-vs-development-dependencies/
-- add logging
 - handle exceptions
     - do not use exists_ok=True in create_bq_dataset > create_dataset, but log existence
     - do not use exists_ok=True in create_bq_table > create_table, but log existence
