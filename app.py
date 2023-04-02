@@ -15,9 +15,8 @@ from src.pipeline import (
 flow_run_name = datetime.now().strftime("%d-%B-%Y_%H:%M:%S")
 
 
-@flow(name="flow-youtube-trending-de", flow_run_name=flow_run_name)
+@flow(name="youtube-trending-de", flow_run_name=flow_run_name)
 def main():
-    # parse job parameter configuration file
     with open("./jobparams.toml", "rb") as f:
         job_conf: dict = tomli.load(f).get("jobparams")
 
