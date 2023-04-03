@@ -12,4 +12,4 @@ bq_table_name = "yt_popular_videos_de"
 gcs_bucket_and_dataset_name = "data_eng_capstone_project"
 
 # path to service account JSON file
-json_credentials_path = "./taxi-rides-ny-376611-f7f2f8eb424c.json"
+json_credentials_path = "./gcp_keys.json"
