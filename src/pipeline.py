@@ -1,12 +1,12 @@
-from pyspark.sql import SparkSession, DataFrame
+from pyspark import sql
 import pyspark.sql.functions as f
 from google.cloud import bigquery, storage
-from prefect import task
+import prefect.task
 
 
-@task
-def create_spark_session() -> SparkSession:
-    spark = SparkSession.builder.getOrCreate()
+@prefect.task
+def create_spark_session() -> sql.SparkSession:
+    spark = sql.SparkSession.builder.getOrCreate()
     spark.conf.set(
         "spark.sql.shuffle.partitions", spark.sparkContext.defaultParallelism
     )
@@ -15,8 +15,8 @@ def create_spark_session() -> SparkSession:
     return spark
 
 
-@task
-def read_from_bronze(source_path: str, spark: SparkSession) -> DataFrame:
+@prefect.task
+def read_from_bronze(source_path: str, spark: sql.SparkSession) -> sql.DataFrame:
     """Get data from bronze directory and load into Spark dataframe.
     Everything is being read as string and has to be converted to target
     data types afterwards.
@@ -24,8 +24,8 @@ def read_from_bronze(source_path: str, spark: SparkSession) -> DataFrame:
     return spark.read.csv(path=source_path, header=True, multiLine=True)
 
 
-@task
-def convert_datatypes(df: DataFrame, spark: SparkSession) -> DataFrame:
+@prefect.task
+def convert_datatypes(df: sql.DataFrame, spark: sql.SparkSession) -> sql.DataFrame:
     df_converted_dtypes = (
         df.withColumn("trending_date", f.to_date("trending_date", "yy.dd.MM"))
         .withColumn("category_id", f.col("category_id").cast("int"))
@@ -43,12 +43,12 @@ def convert_datatypes(df: DataFrame, spark: SparkSession) -> DataFrame:
     return df_converted_dtypes
 
 
-@task
-def write_to_silver_layer(df: DataFrame, target_path: str) -> None:
+@prefect.task
+def write_to_silver_layer(df: sql.DataFrame, target_path: str) -> None:
     df.toPandas().to_parquet(path=target_path)
 
 
-@task
+@prefect.task
 def write_to_gcs_bucket(
     file_in_silver_layer: str,
     bucket_name: str,
@@ -64,7 +64,7 @@ def write_to_gcs_bucket(
     blob.upload_from_filename(file_in_silver_layer)
 
 
-@task
+@prefect.task
 def create_bq_dataset(json_credentials_path: str, dataset_name: str) -> None:
     client = bigquery.Client.from_service_account_json(json_credentials_path)
 
@@ -80,7 +80,7 @@ def create_bq_dataset(json_credentials_path: str, dataset_name: str) -> None:
     print("Created dataset {}.{}".format(client.project, dataset_job.dataset_id))
 
 
-@task
+@prefect.task
 def create_bq_table(
     json_credentials_path: str,
     dataset_name: str,
