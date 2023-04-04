@@ -4,7 +4,6 @@
   - [Google Cloud Credentials](#google-cloud-credentials)
     - [Enable the APIs](#enable-the-apis)
     - [Provide a JSON Credentials File](#provide-a-json-credentials-file)
-    - [Configuring Job Parameters](#configuring-job-parameters)
 - [Running the Code](#running-the-code)
 - [How This Application Works](#how-this-application-works)
 - [Dashboard Result](#dashboard-result)
@@ -43,10 +42,7 @@ If you don't have one, see [Create Service Accounts](https://cloud.google.com/ia
 If not done yet, create a key JSON file for your service account. See [Create Service Account Key](https://cloud.google.com/iam/docs/keys-create-delete). If you already have a Service Account key on your local drive, use that one.
 
 Place the JSON credentials file for your service account into the root directory of this project (where README.md and
-jobparams.toml are located).
-
-### Configuring Job Parameters
-Modify the [jobparams.toml](./jobparams.toml) by setting the `json_credentials_path` to your JSON key file.
+jobparams.toml are located). give it exactly the name `gcp_keys.json`.
 
 # Running the Code
 1. Clone this repository
@@ -69,7 +65,7 @@ python app.py
 ```
 
 # How This Application Works
-TODO: proceed here
+Entrypoint to this application is the file [app.py](./app.py). It contains the Prefect flow and the function invocations which are Prefect tasks at the same time. The function definitions are located in [pipeline.py](./src/pipeline.py). The job parameters are defined in the config file [jobparams.toml](./jobparams.toml).
 
 # Dashboard Result
 The data pipeline ultimately feeds into a Looker Studio dashboard. It can be viewed [here](https://lookerstudio.google.com/reporting/77a47276-3a27-4fe3-a57a-337966fcefe7). 
