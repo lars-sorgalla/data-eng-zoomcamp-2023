@@ -1,16 +1,8 @@
 import datetime
 import unittest
-import src.pipeline as p
-from pyspark.sql import SparkSession
-from pyspark.sql.types import (
-    BooleanType,
-    IntegerType,
-    TimestampType,
-    DateType,
-    StringType,
-    StructType,
-    StructField,
-)
+from src import pipeline
+from pyspark import sql
+from pyspark.sql import types
 
 
 class TestConvertDataTypes(unittest.TestCase):
@@ -21,7 +13,7 @@ class TestConvertDataTypes(unittest.TestCase):
     # executed before test case
     @classmethod
     def setUpClass(cls):
-        cls.spark = SparkSession.builder.getOrCreate()
+        cls.spark = sql.SparkSession.builder.getOrCreate()
         cls.spark.conf.set(
             "spark.sql.shuffle.partitions", cls.spark.sparkContext.defaultParallelism
         )
@@ -33,24 +25,30 @@ class TestConvertDataTypes(unittest.TestCase):
 
     def test_convert_datatypes(self):
         # 1. Prepare an input data frame that mimics our source data
-        input_schema = StructType(
+        input_schema = types.StructType(
             [
-                StructField("video_id", StringType(), nullable=True),
-                StructField("trending_date", StringType(), nullable=True),
-                StructField("title", StringType(), nullable=True),
-                StructField("channel_title", StringType(), nullable=True),
-                StructField("category_id", StringType(), nullable=True),
-                StructField("publish_time", StringType(), nullable=True),
-                StructField("tags", StringType(), nullable=True),
-                StructField("views", StringType(), nullable=True),
-                StructField("likes", StringType(), nullable=True),
-                StructField("dislikes", StringType(), nullable=True),
-                StructField("comment_count", StringType(), nullable=True),
-                StructField("thumbnail_link", StringType(), nullable=True),
-                StructField("comments_disabled", StringType(), nullable=True),
-                StructField("ratings_disabled", StringType(), nullable=True),
-                StructField("video_error_or_removed", StringType(), nullable=True),
-                StructField("description", StringType(), nullable=True),
+                types.StructField("video_id", types.StringType(), nullable=True),
+                types.StructField("trending_date", types.StringType(), nullable=True),
+                types.StructField("title", types.StringType(), nullable=True),
+                types.StructField("channel_title", types.StringType(), nullable=True),
+                types.StructField("category_id", types.StringType(), nullable=True),
+                types.StructField("publish_time", types.StringType(), nullable=True),
+                types.StructField("tags", types.StringType(), nullable=True),
+                types.StructField("views", types.StringType(), nullable=True),
+                types.StructField("likes", types.StringType(), nullable=True),
+                types.StructField("dislikes", types.StringType(), nullable=True),
+                types.StructField("comment_count", types.StringType(), nullable=True),
+                types.StructField("thumbnail_link", types.StringType(), nullable=True),
+                types.StructField(
+                    "comments_disabled", types.StringType(), nullable=True
+                ),
+                types.StructField(
+                    "ratings_disabled", types.StringType(), nullable=True
+                ),
+                types.StructField(
+                    "video_error_or_removed", types.StringType(), nullable=True
+                ),
+                types.StructField("description", types.StringType(), nullable=True),
             ]
         )
         input_data = [
@@ -78,24 +76,30 @@ class TestConvertDataTypes(unittest.TestCase):
         input_df = self.spark.createDataFrame(data=input_data, schema=input_schema)
 
         # 2. Prepare an expected output data frame
-        expected_schema = StructType(
+        expected_schema = types.StructType(
             [
-                StructField("video_id", StringType(), nullable=True),
-                StructField("trending_date", DateType(), nullable=True),
-                StructField("title", StringType(), nullable=True),
-                StructField("channel_title", StringType(), nullable=True),
-                StructField("category_id", IntegerType(), nullable=True),
-                StructField("publish_time", TimestampType(), nullable=True),
-                StructField("tags", StringType(), nullable=True),
-                StructField("views", IntegerType(), nullable=True),
-                StructField("likes", IntegerType(), nullable=True),
-                StructField("dislikes", IntegerType(), nullable=True),
-                StructField("comment_count", IntegerType(), nullable=True),
-                StructField("thumbnail_link", StringType(), nullable=True),
-                StructField("comments_disabled", BooleanType(), nullable=True),
-                StructField("ratings_disabled", BooleanType(), nullable=True),
-                StructField("video_error_or_removed", BooleanType(), nullable=True),
-                StructField("description", StringType(), nullable=True),
+                types.StructField("video_id", types.StringType(), nullable=True),
+                types.StructField("trending_date", types.DateType(), nullable=True),
+                types.StructField("title", types.StringType(), nullable=True),
+                types.StructField("channel_title", types.StringType(), nullable=True),
+                types.StructField("category_id", types.IntegerType(), nullable=True),
+                types.StructField("publish_time", types.TimestampType(), nullable=True),
+                types.StructField("tags", types.StringType(), nullable=True),
+                types.StructField("views", types.IntegerType(), nullable=True),
+                types.StructField("likes", types.IntegerType(), nullable=True),
+                types.StructField("dislikes", types.IntegerType(), nullable=True),
+                types.StructField("comment_count", types.IntegerType(), nullable=True),
+                types.StructField("thumbnail_link", types.StringType(), nullable=True),
+                types.StructField(
+                    "comments_disabled", types.BooleanType(), nullable=True
+                ),
+                types.StructField(
+                    "ratings_disabled", types.BooleanType(), nullable=True
+                ),
+                types.StructField(
+                    "video_error_or_removed", types.BooleanType(), nullable=True
+                ),
+                types.StructField("description", types.StringType(), nullable=True),
             ]
         )
 
@@ -128,7 +132,7 @@ class TestConvertDataTypes(unittest.TestCase):
         )
 
         # 3. transform input data
-        transformed_df = p.convert_datatypes.fn(input_df, self.spark)
+        transformed_df = pipeline.convert_datatypes.fn(input_df, self.spark)
 
         # 4. assert if transformed df and expected df match
         # 4.1. compare schemas
