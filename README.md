@@ -45,6 +45,7 @@ Place the JSON credentials file for your service account into the root directory
 jobparams.toml are located). give it exactly the name `gcp_keys.json`.
 
 # Running the Code
+*Note: these instructions are used for macOS/Linux/WSL, for Windows it may differ*
 1. Clone this repository
 2. `cd` into the root directory of this project
 3. create a virtual environment using your platform specific syntax. For macOS this is
@@ -62,6 +63,10 @@ pip install -r requirements.txt
 6. Run the application 
 ```bash
 python app.py
+```
+*There is an additional option to execute the unit tests via*
+```bash
+python -m test.test_pipeline
 ```
 
 # How This Application Works
