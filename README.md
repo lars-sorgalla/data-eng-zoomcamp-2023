@@ -1,5 +1,4 @@
 - [Welcome](#welcome)
-- [TODOs](#todos)
 - [Setup](#setup)
   - [Google Cloud Credentials](#google-cloud-credentials)
     - [Enable the APIs](#enable-the-apis)
@@ -12,17 +11,6 @@
 This project contains an end-to-end data pipeline, written in Python. It is my capstone project to finalize the [Data Engineering Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp#data-engineering-zoomcamp) in the 2023 Cohort. 
 
 The application reads local CSV data - into bronze layer - about trending Youtube videos in Germany, transforms it with Apache Spark - into silver layer - and uploads it to Google Cloud Storage. Then it is loaded from GCS into BigQuery. At the very end is a dashboard in Looker Studio, that connects to the transformed table in BigQuery.
-
-# TODOs
-- create requirements_dev.txt for dev dependencies which are not needed for prod 
-environments e.g. Jupyter for local iterative development 
-see: https://realpython.com/lessons/production-vs-development-dependencies/
-- use terraform to create GCP resources/permissions
-- handle exceptions
-    - do not use exists_ok=True in create_bq_dataset > create_dataset, but log existence
-    - do not use exists_ok=True in create_bq_table > create_table, but log existence
-    - do not use not_found_ok=True in create_bq_table > delete_table, but log inexistence
-- extract authorization into private function e.g. _authorize_gcloud_services
 
 # Setup
 Before running the code you need to follow the steps below.
